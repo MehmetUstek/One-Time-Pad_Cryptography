@@ -1,19 +1,17 @@
 
-import os,binascii
+L= input("Input a length L:\n")
+N = input("Input a number of messages N:\n")
+n = int(N)
+l = int(L)
+# n= 2
+# l = 60
+plaintext_lst = []
+ciphertext_lst = []
+for i in range(n):
+    plaintext_lst.append((input("Plaintext "+str(i)+":\n")))
 
-# L= input("Input a length L:\n")
-# N = input("Input a number of messages N:\n")
-# n = int(N)
-# l = int(L)
-n= 3
-l = 60
-plaintext_lst = ["5769736874686174496861646265656e626f726e6c6f6e676265666f7265","4d7962726f7468657273676f746d657570616761696e737474686577616c","4f6e656d6f7265646179616e644977696c6c62655468656b696e67466f72"]
-ciphertext_lst = ["d7e1b2e3e7432e2eb0fb14e84c4a77e1f6331f8eceed0b4ce72e0760ebde","d5f6b5fce745232fa3f112e95c6e65fdea3e1a8af3eb1d53fa280551e5c0","cdf1a3f9fc5f273f8be012e35a4277fae43d0a81cbec165ff1230478f8d7"]
-# for i in range(n):
-#     plaintext_lst.append((input("Plaintext "+str(i)+":\n")))
-#
-# for i in range(n):
-#     ciphertext_lst.append((input("Ciphertext "+str(i)+":\n")))
+for i in range(n):
+    ciphertext_lst.append((input("Ciphertext "+str(i)+":\n")))
 
 
 # For every plaintext and cipher pairs, iterate all over, until two keys match.
@@ -37,6 +35,8 @@ for p in range(n):
             # print(var1)
             # key_list.append(var1)
             key_string += var1
+        if n < 2:
+            real_key = key_string
         if p == 0:
             key_list1.append(key_string)
             key_string = ""
@@ -49,30 +49,49 @@ for p in range(n):
             key_string = ""
 
 
-    print(key_list1)
-    print(key_list2)
+    # print(key_list1)
+    # print(key_list2)
 pair_list = []
 identical_keys = []
 for j in range(n):
-    for k in range(n):
-        if key_list1[j] == key_list2[k]:
-            identical_keys.append(key_list1[j])
-            # real_key = key_list1[j]
-            print("k", k)
-            # pair_list.append((j,k))
+    if n>1:
+        for k in range(n):
+            if key_list1[j] == key_list2[k]:
+                identical_keys.append(key_list1[j])
+                # real_key = key_list1[j]
+                # print("k", k)
+                # pair_list.append((j,k))
 
-print("identical_keys:\n", identical_keys)
+# print("identical_keys:\n", identical_keys)
 for j in range(n):
-    for i in range(len(identical_keys)):
-        if identical_keys[i] == key_list3[j]:
-            real_key = identical_keys[i]
+    if n>2:
+        for i in range(len(identical_keys)):
+            if identical_keys[i] == key_list3[j]:
+                real_key = identical_keys[i]
 
-for i in range(n):
-    pass
+key_string = ""
+for p in range(n):
+    for c in range(n):
+        for a in range(l):
+            plain_hex = int(plaintext_lst[p][a], 16)
+            cipher_hex = int(ciphertext_lst[c][a],16)
+            var = (plain_hex ^ cipher_hex)
+            # print(hex(var))
+            var1 = str(hex(var))[2:]
+            # print(var1)
+            # key_list.append(var1)
+            key_string += var1
+        # print(key_string)
+        if key_string == real_key:
+            pair_list.append((p,c))
+            key_string = ""
+        else:
+            key_string = ""
+
 
 
 # Outputting pairs
-print("pairsss", pair_list)
+# print("pairsss", pair_list)
 list_of_pairs = []
 for l,m in pair_list:
     list_of_pairs.append(("Plaintext"+str(l+1), "Ciphertext"+ str(m+1)))
@@ -98,5 +117,10 @@ print(list_of_pairs)
 
 # key = binascii.b2a_hex(os.urandom(l))
 
-print("key:\n",key_string)
-print(real_key)
+
+if n>2:
+    print("key:\n", key_string)
+    print(real_key)
+else:
+    print("One of these keys are correct but cannot differentiate with n<3:\n", key_string)
+    print(identical_keys)
