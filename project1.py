@@ -1,4 +1,3 @@
-
 L= input("Input a length L:\n")
 N = input("Input a number of messages N:\n")
 n = int(N)
